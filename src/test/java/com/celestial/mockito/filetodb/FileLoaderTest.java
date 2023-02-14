@@ -62,4 +62,30 @@ public class FileLoaderTest
         // assert
         assertEquals(expectedBytesRead, bytesRead);
     }
+    
+         // Redesign has worked so this test uses a stub to simulate a file being
+     // loaded, it is passed in as lambda - We've decoupled ourselves from the 
+     // filesystem
+     @Test
+     public void load_all_of_file_via_stub() 
+     {
+         // arrange
+         String fileToLoad = "";
+         FileLoader cut = new FileLoader(fileToLoad);
+         int expectedBytesRead = 10;
+         
+         // act
+         int bytesRead = cut.loadFile((fname) ->
+         {
+            List<String> result = new ArrayList<>();
+            
+            result.add("Hello");
+            result.add("world");
+
+            return result;
+         });
+         
+         // assert
+         assertEquals(expectedBytesRead, bytesRead);
+     }
 }
