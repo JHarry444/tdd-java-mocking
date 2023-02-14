@@ -10,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -87,5 +89,35 @@ public class FileLoaderTest
          
          // assert
          assertEquals(expectedBytesRead, bytesRead);
+     }
+     
+     @Test
+     public void load_all_of_file_using_mock()
+     {
+        // arrange
+        String fileToLoad = "c:/tmp/KeyboardHandler.java.txt";
+        FileLoader cut = new FileLoader( fileToLoad );
+        // setup ur canned data, these will represent the lines in the file
+        ArrayList<String> pretendFileContent = new ArrayList<>();
+        pretendFileContent.add("Hello");
+        pretendFileContent.add("world");
+        int expectedBytesRead = 10;
+        
+        // Mock the interface
+        MyFile file = mock(MyFile.class);
+        
+        // Setup the expectation
+        when(file.readAllLines(Paths.get(fileToLoad), StandardCharsets.UTF_8)).thenReturn(pretendFileContent);
+        
+        // act
+        int bytesRead = cut.loadFile((fname) ->
+        {
+            List<String> result = file.readAllLines(Paths.get(fname), StandardCharsets.UTF_8);
+
+            return result;
+        });
+        
+         // assert
+         assertEquals(expectedBytesRead, bytesRead);        
      }
 }
